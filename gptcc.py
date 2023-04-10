@@ -4,6 +4,7 @@ import subprocess
 from tempfile import NamedTemporaryFile
 from dotenv import load_dotenv
 import openai
+import platform
 
 load_dotenv()
 
@@ -11,8 +12,10 @@ load_dotenv()
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
 def gpt_generate_assembly(code):
+    host_arch = platform.machine()
+
     messages = [
-        {"role": "system", "content": "You are a helpful assistant that generates x86-64 (macho64) assembly code for a given C code. You will receive a prompt with a C program. You must convert the program to assembly and return the assembly output in plain english. Do not include any other text."},
+        {"role": "system", "content": "You are a helpful assistant that generates assembly code for C code. You will receive a prompt with a C program. You must convert the program to assembly and return the assembly output in NASM syntax. Do not include any other text. The host and target architecture is {host_arch}. Use Mach-O 64-bit."},
         {"role": "user", "content": f"Generate assembly code for this C code:\n{code}"}
     ]
 
